@@ -1,8 +1,8 @@
 /* ============================================================
    BLACK MONKEY — Widget de Reseñas de Google (versión oscura,
    integrada a la estética de la tienda)
-   Se inserta automáticamente DEBAJO de "Sumalo a tu compra"
-   (busca el contenedor .bm-sumalo-wrap y se monta justo después).
+   Se inserta automáticamente ARRIBA de la descripción del producto
+   (busca .product-description.user-content y se monta justo antes).
 
    Uso en Tienda Nube → Configuración → Códigos externos:
    <script src="https://cdn.jsdelivr.net/gh/TU_USUARIO/TU_REPO@COMMIT_HASH/black-monkey-google-reviews.js"></script>
@@ -10,7 +10,7 @@
 (function () {
   "use strict";
 
-  var ANCHOR_SELECTOR = ".bm-sumalo-wrap";
+  var ANCHOR_SELECTOR = ".product-description.user-content";
   var MOUNT_ID = "bm-google-reviews";
   var MAX_WAIT_MS = 15000;
 
@@ -21,7 +21,7 @@
 
     var mount = document.createElement("div");
     mount.id = MOUNT_ID;
-    anchor.insertAdjacentElement("afterend", mount);
+    anchor.insertAdjacentElement("beforebegin", mount);
     buildWidget(mount);
     return true;
   }
