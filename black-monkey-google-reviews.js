@@ -1,16 +1,11 @@
 /* ============================================================
-   BLACK MONKEY — Widget de Reseñas de Google
+   BLACK MONKEY — Widget de Reseñas de Google (versión oscura,
+   integrada a la estética de la tienda)
    Se inserta automáticamente DEBAJO de "Sumalo a tu compra"
    (busca el contenedor .bm-sumalo-wrap y se monta justo después).
 
-   Uso en Tienda Nube → Configuración → Códigos externos
-   (footer / body, junto con el resto de tus scripts):
-
+   Uso en Tienda Nube → Configuración → Códigos externos:
    <script src="https://cdn.jsdelivr.net/gh/TU_USUARIO/TU_REPO@COMMIT_HASH/black-monkey-google-reviews.js"></script>
-
-   No hace falta agregar ningún <div> a mano: el script crea su
-   propio contenedor y lo ubica solo, en cualquier página de
-   producto donde exista el widget de Sumalo.
    ============================================================ */
 (function () {
   "use strict";
@@ -20,7 +15,7 @@
   var MAX_WAIT_MS = 15000;
 
   function tryMount() {
-    if (document.getElementById(MOUNT_ID)) return true; // ya montado
+    if (document.getElementById(MOUNT_ID)) return true;
     var anchor = document.querySelector(ANCHOR_SELECTOR);
     if (!anchor) return false;
 
@@ -31,8 +26,6 @@
     return true;
   }
 
-  // Reintenta hasta que "Sumalo a tu compra" haya insertado su bloque
-  // (los dos scripts pueden cargar en cualquier orden).
   if (!tryMount()) {
     var observer = new MutationObserver(function () {
       if (tryMount()) observer.disconnect();
@@ -75,52 +68,49 @@
       { name: "Matías Piriz", meta: "1 reseña", stars: 5, time: "Hace 7 meses", text: "Excelente calidad, encima llegó rápido. Volvería a comprar." }
     ];
 
-    var AVATAR_COLORS = ["#7B1FA2","#1A73E8","#D93025","#188038","#F9AB00","#E8710A","#616161","#8430CE"];
+    var AVATAR_COLORS = ["#a52a2a","#8c1c1c","#c9a34d","#5a7a5a","#4a6a8a","#7a5a3a","#6a5a7a","#3a5a5a"];
     var ROTATE_MS = 6000;
 
-    // ---- Inyectar estilos (una sola vez, aunque haya varias instancias) ----
     if (!document.getElementById('bm-grw-styles')) {
       var style = document.createElement('style');
       style.id = 'bm-grw-styles';
       style.textContent = [
-        '.bm-grw{--g-text:#202124;--g-grey:#70757a;--g-gold:#fbbc04;--g-border:#e8eaed;--g-blue:#1a73e8;',
-        'max-width:100%;margin:24px 0 0;background:#fff;color:var(--g-text);border:1px solid var(--g-border);',
-        'border-radius:12px;padding:20px 22px 16px;font-family:"Google Sans",Roboto,Arial,Helvetica,sans-serif;',
-        'box-shadow:0 1px 6px rgba(32,33,36,.15);box-sizing:border-box;}',
+        '.bm-grw{--bm-bg:#0d0d0d;--bm-border:#3a1414;--bm-text:#f0ece2;--bm-grey:#9a9a9a;--bm-gold:#d9a441;--bm-red:#8c1c1c;',
+        'max-width:100%;margin:24px 0 0;background:var(--bm-bg);color:var(--bm-text);border:1px solid var(--bm-border);',
+        'border-radius:6px;padding:18px 16px;font-family:Arial,Helvetica,sans-serif;box-sizing:border-box;}',
         '.bm-grw *{box-sizing:border-box;}',
-        '.bm-grw__header{display:flex;align-items:center;gap:10px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--g-border);}',
+        '.bm-grw__header{display:flex;align-items:center;gap:10px;padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--bm-border);}',
         '.bm-grw__headtext{display:flex;flex-direction:column;}',
-        '.bm-grw__brand{font-size:15px;font-weight:600;color:var(--g-text);}',
-        '.bm-grw__summary{font-size:12.5px;color:var(--g-grey);display:flex;align-items:center;gap:4px;}',
-        '.bm-grw__avgnum{font-weight:600;color:var(--g-text);}',
-        '.bm-grw__avgstars{color:var(--g-gold);font-size:12px;letter-spacing:1px;}',
+        '.bm-grw__brand{font-size:15px;font-weight:700;letter-spacing:.02em;color:var(--bm-text);text-transform:uppercase;}',
+        '.bm-grw__summary{font-size:12px;color:var(--bm-grey);display:flex;align-items:center;gap:4px;}',
+        '.bm-grw__avgnum{font-weight:700;color:var(--bm-text);}',
+        '.bm-grw__avgstars{color:var(--bm-gold);font-size:12px;letter-spacing:1px;}',
         '.bm-grw__stage{display:flex;align-items:flex-start;gap:10px;}',
         '.bm-grw__card{flex:1;min-height:150px;opacity:1;transition:opacity .3s ease;}',
         '.bm-grw__card.bm-grw--fade{opacity:0;}',
         '.bm-grw__row{display:flex;align-items:center;gap:12px;margin-bottom:6px;}',
-        '.bm-grw__avatar{width:40px;height:40px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:500;}',
+        '.bm-grw__avatar{width:38px;height:38px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#f0ece2;font-size:15px;font-weight:700;}',
         '.bm-grw__who{display:flex;flex-direction:column;}',
-        '.bm-grw__name{font-size:14px;font-weight:500;color:var(--g-text);}',
-        '.bm-grw__meta{font-size:12px;color:var(--g-grey);}',
+        '.bm-grw__name{font-size:14px;font-weight:700;color:var(--bm-text);}',
+        '.bm-grw__meta{font-size:11.5px;color:var(--bm-grey);}',
         '.bm-grw__starsrow{display:flex;align-items:center;gap:8px;margin:2px 0 8px;}',
-        '.bm-grw__stars{color:var(--g-gold);font-size:14px;letter-spacing:2px;}',
-        '.bm-grw__time{font-size:12px;color:var(--g-grey);}',
-        '.bm-grw__text{font-size:14px;line-height:1.55;color:var(--g-text);margin:0;}',
-        '.bm-grw__arrow{background:#fff;border:1px solid var(--g-border);color:var(--g-grey);width:30px;height:30px;min-width:30px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:box-shadow .2s,color .2s;margin-top:8px;}',
-        '.bm-grw__arrow:hover{box-shadow:0 1px 4px rgba(32,33,36,.25);color:var(--g-blue);}',
-        '.bm-grw__dots{display:flex;justify-content:center;gap:6px;margin-top:14px;}',
-        '.bm-grw__dot{width:6px;height:6px;border-radius:50%;background:var(--g-border);cursor:pointer;transition:background .2s,transform .2s;}',
-        '.bm-grw__dot.bm-grw__dot--active{background:var(--g-blue);transform:scale(1.3);}',
-        '@media(max-width:480px){.bm-grw{padding:16px 14px 12px;}.bm-grw__text{font-size:13.5px;}}'
+        '.bm-grw__stars{color:var(--bm-gold);font-size:14px;letter-spacing:2px;}',
+        '.bm-grw__time{font-size:11.5px;color:var(--bm-grey);}',
+        '.bm-grw__text{font-size:13.5px;line-height:1.55;color:var(--bm-text);margin:0;font-style:italic;}',
+        '.bm-grw__arrow{background:transparent;border:1px solid #4a4a4a;color:var(--bm-text);width:28px;height:28px;min-width:28px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s;margin-top:6px;}',
+        '.bm-grw__arrow:hover{border-color:var(--bm-red);color:var(--bm-gold);}',
+        '.bm-grw__dots{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:14px;max-width:100%;}',
+        '.bm-grw__dot{width:5px;height:5px;border-radius:50%;background:#3a3a3a;cursor:pointer;transition:background .2s,transform .2s;}',
+        '.bm-grw__dot.bm-grw__dot--active{background:var(--bm-gold);transform:scale(1.4);}',
+        '@media(max-width:480px){.bm-grw{padding:14px 12px;}.bm-grw__text{font-size:13px;}}'
       ].join('');
       document.head.appendChild(style);
     }
 
-    // ---- Inyectar markup ----
     mount.className = 'bm-grw';
     mount.innerHTML =
       '<div class="bm-grw__header">' +
-        '<svg width="24" height="24" viewBox="0 0 48 48" aria-hidden="true">' +
+        '<svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true">' +
           '<path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>' +
           '<path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.9-2.26 5.36-4.78 7.02l7.73 6c4.51-4.18 7.09-10.36 7.09-17.49z"/>' +
           '<path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.78l7.97-6.19z"/>' +
@@ -143,7 +133,6 @@
       '</div>' +
       '<div class="bm-grw__dots" id="bm-grw-dots"></div>';
 
-    // ---- Lógica de rotación ----
     var order = BM_REVIEWS.map(function (_, i) { return i; });
     for (var i = order.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
