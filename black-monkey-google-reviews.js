@@ -118,7 +118,7 @@
         '</svg>' +
         '<div class="bm-grw__headtext">' +
           '<div class="bm-grw__brand">Black Monkey</div>' +
-          '<div class="bm-grw__summary"><span class="bm-grw__avgnum">4.9</span><span class="bm-grw__avgstars">★★★★★</span><span>· Reseñas de Google</span></div>' +
+          '<div class="bm-grw__summary"><span>Reseñas de Google</span></div>' +
         '</div>' +
       '</div>' +
       '<div class="bm-grw__stage">' +
